@@ -1,0 +1,27 @@
+@model Review
+@{
+    ViewData["Title"] = "Delete Review";
+}
+
+<h1>Delete Review</h1>
+
+<div class="card" style="border-color:#cc2222;">
+    <p class="danger"><strong>Are you sure you want to delete this review?</strong></p>
+</div>
+
+<div class="card" style="max-width: 600px;">
+    <table>
+        <tr><th style="width:25%;">Game</th><td>@Model.Game.Title</td></tr>
+        <tr><th>Reviewer</th><td>@Model.ReviewerName</td></tr>
+        <tr><th>Rating</th><td><span class="rating">★ @Model.Rating / 10</span></td></tr>
+        <tr><th>Title</th><td>@Model.Title</td></tr>
+        <tr><th>Comment</th><td>@Model.Comment</td></tr>
+    </table>
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <div class="actions">
+            <button type="submit" class="btn btn-danger">Confirm Delete</button>
+            <a asp-controller="Games" asp-action="Details" asp-route-id="@Model.GameId" class="btn">Cancel</a>
+        </div>
+    </form>
+</div>

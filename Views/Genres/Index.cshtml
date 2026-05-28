@@ -1,0 +1,17 @@
+@model IEnumerable<Genre>
+@{
+    ViewData["Title"] = "Genres";
+}
+
+<h1>Browse by Genre</h1>
+
+<div class="grid grid-3">
+    @foreach (var genre in Model)
+    {
+        <div class="card">
+            <h3><a asp-action="Details" asp-route-id="@genre.Id">@genre.Name</a></h3>
+            <p class="muted">@genre.Description</p>
+            <p><strong>@genre.Games.Count</strong> games</p>
+        </div>
+    }
+</div>

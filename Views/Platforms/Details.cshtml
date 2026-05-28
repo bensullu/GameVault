@@ -1,0 +1,31 @@
+@model Platform
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<ul class="breadcrumb">
+    <li><a asp-action="Index">Platforms</a></li>
+    <li>@Model.Name</li>
+</ul>
+
+<div class="card">
+    <h1>@Model.Name</h1>
+    <p><strong>Manufacturer:</strong> @Model.Manufacturer</p>
+    <p><strong>Released:</strong> @Model.ReleaseYear</p>
+    <p><strong>@Model.GamePlatforms.Count</strong> games available on this platform</p>
+</div>
+
+<h2>Available Games</h2>
+<div class="grid grid-4">
+    @foreach (var gp in Model.GamePlatforms.OrderByDescending(g => g.Game.ReleaseDate))
+    {
+        var game = gp.Game;
+        <div class="game-card">
+            <h3><a asp-controller="Games" asp-action="Details" asp-route-id="@game.Id">@game.Title</a></h3>
+            <div class="meta">@game.Studio.Name &middot; @game.Genre.Name</div>
+            <div style="margin-top:auto;">
+                <span class="@(game.Price == 0 ? "price price-free" : "price")">@(game.Price == 0 ? "FREE" : $"${game.Price}")</span>
+            </div>
+        </div>
+    }
+</div>

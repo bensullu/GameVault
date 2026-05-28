@@ -1,0 +1,38 @@
+@model Genre
+@{
+    ViewData["Title"] = $"{Model.Name} Games";
+}
+
+<ul class="breadcrumb">
+    <li><a asp-action="Index">Genres</a></li>
+    <li>@Model.Name</li>
+</ul>
+
+<div class="card">
+    <h1>@Model.Name</h1>
+    <p>@Model.Description</p>
+    <p><strong>@Model.Games.Count</strong> games in this genre</p>
+</div>
+
+<h2>All @Model.Name Games</h2>
+<div class="grid grid-4">
+    @foreach (var game in Model.Games.OrderByDescending(g => g.ReleaseDate))
+    {
+        var avg = game.Reviews.Any() ? game.Reviews.Average(r => r.Rating) : 0;
+        <div class="game-card">
+            <h3><a asp-controller="Games" asp-action="Details" asp-route-id="@game.Id">@game.Title</a></h3>
+            <div class="meta">@game.Studio.Name</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:auto;">
+                @if (game.Reviews.Any())
+                {
+                    <span class="rating">★ @avg.ToString("F1")</span>
+                }
+                else
+                {
+                    <span class="muted" style="font-size:0.85rem;">No reviews</span>
+                }
+                <span class="@(game.Price == 0 ? "price price-free" : "price")">@(game.Price == 0 ? "FREE" : $"${game.Price}")</span>
+            </div>
+        </div>
+    }
+</div>

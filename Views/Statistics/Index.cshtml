@@ -1,0 +1,103 @@
+@model StatisticsViewModel
+@{
+    ViewData["Title"] = "Statistics";
+}
+
+<h1>Library Statistics</h1>
+
+<div class="grid grid-4">
+    <div class="stat-card"><div class="big">@Model.TotalGames</div><div class="label">Total Games</div></div>
+    <div class="stat-card"><div class="big">@Model.TotalStudios</div><div class="label">Studios</div></div>
+    <div class="stat-card"><div class="big">@Model.TotalGenres</div><div class="label">Genres</div></div>
+    <div class="stat-card"><div class="big">@Model.TotalReviews</div><div class="label">Reviews</div></div>
+</div>
+
+<div class="row-2" style="margin-top:1.5rem;">
+    <div class="card">
+        <h3>Library Averages</h3>
+        <p><strong>Average price:</strong> $@Model.AveragePrice</p>
+        <p><strong>Average rating:</strong> <span class="rating">★ @Model.AverageRating.ToString("F2") / 10</span></p>
+    </div>
+
+    @if (Model.TopRatedGame != null)
+    {
+        <div class="card">
+            <h3>Top Rated</h3>
+            <p><a asp-controller="Games" asp-action="Details" asp-route-id="@Model.TopRatedGame.Id">@Model.TopRatedGame.Title</a></p>
+            <p class="rating">★ @Model.TopRatingValue / 10</p>
+        </div>
+    }
+
+    @if (Model.MostReviewedGame != null)
+    {
+        <div class="card">
+            <h3>Most Reviewed</h3>
+            <p><a asp-controller="Games" asp-action="Details" asp-route-id="@Model.MostReviewedGame.Id">@Model.MostReviewedGame.Title</a></p>
+            <p>@Model.MostReviewsCount reviews</p>
+        </div>
+    }
+</div>
+
+<h2 style="margin-top:2rem;">Games by Genre</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Genre</th>
+            <th class="text-center">Games</th>
+            <th class="text-center">Avg Price</th>
+            <th class="text-center">Avg Rating</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var stat in Model.GenreStats)
+        {
+            <tr>
+                <td><a asp-controller="Genres" asp-action="Details" asp-route-id="@stat.Genre.Id">@stat.Genre.Name</a></td>
+                <td class="text-center">@stat.GameCount</td>
+                <td class="text-center">$@stat.AveragePrice</td>
+                <td class="text-center">
+                    @if (stat.AverageRating > 0)
+                    {
+                        <span class="rating">★ @stat.AverageRating.ToString("F1")</span>
+                    }
+                    else
+                    {
+                        <span class="muted">-</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h2 style="margin-top:2rem;">Games by Studio</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Studio</th>
+            <th>Country</th>
+            <th class="text-center">Games</th>
+            <th class="text-center">Avg Rating</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var stat in Model.StudioStats)
+        {
+            <tr>
+                <td><a asp-controller="Studios" asp-action="Details" asp-route-id="@stat.Studio.Id">@stat.Studio.Name</a></td>
+                <td>@stat.Studio.Country</td>
+                <td class="text-center">@stat.GameCount</td>
+                <td class="text-center">
+                    @if (stat.AverageRating > 0)
+                    {
+                        <span class="rating">★ @stat.AverageRating.ToString("F1")</span>
+                    }
+                    else
+                    {
+                        <span class="muted">-</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,19 @@
+@model IEnumerable<Studio>
+@{
+    ViewData["Title"] = "Studios";
+}
+
+<h1>Studios</h1>
+
+<div class="grid grid-3">
+    @foreach (var studio in Model)
+    {
+        <div class="card">
+            <h3><a asp-action="Details" asp-route-id="@studio.Id">@studio.Name</a></h3>
+            <div class="muted" style="font-size:0.9rem;">@studio.Country &middot; Founded @studio.FoundedYear</div>
+            <p>@studio.Description</p>
+            <p><strong>@studio.Games.Count</strong> games in library</p>
+            <a asp-action="Details" asp-route-id="@studio.Id" class="btn btn-sm">View Games</a>
+        </div>
+    }
+</div>

@@ -1,0 +1,89 @@
+@model Game
+@{
+    ViewData["Title"] = Model.Title;
+    var avgRating = Model.Reviews.Any() ? Model.Reviews.Average(r => r.Rating) : 0;
+    var recommendPercent = Model.Reviews.Any() ? (Model.Reviews.Count(r => r.Recommended) * 100 / Model.Reviews.Count) : 0;
+}
+
+<ul class="breadcrumb">
+    <li><a asp-action="Index">Games</a></li>
+    <li>@Model.Title</li>
+</ul>
+
+<div class="card">
+    <div class="row-2">
+        <div>
+            <h1>@Model.Title</h1>
+            <p>@Model.Description</p>
+            <p>
+                <strong>Studio:</strong>
+                <a asp-controller="Studios" asp-action="Details" asp-route-id="@Model.StudioId">@Model.Studio.Name</a>
+                &nbsp;|&nbsp;
+                <strong>Genre:</strong>
+                <a asp-controller="Genres" asp-action="Details" asp-route-id="@Model.GenreId" class="tag">@Model.Genre.Name</a>
+            </p>
+            <p><strong>Release Date:</strong> @Model.ReleaseDate.ToString("dd MMM yyyy")</p>
+            <p>
+                <strong>Available on:</strong>
+                @foreach (var gp in Model.GamePlatforms)
+                {
+                    <a asp-controller="Platforms" asp-action="Details" asp-route-id="@gp.PlatformId" class="tag">@gp.Platform.Name</a>
+                }
+            </p>
+        </div>
+        <div style="min-width:220px;max-width:260px;">
+            <div class="stat-card">
+                <div class="big @(Model.Price == 0 ? "" : "")" style="color:@(Model.Price == 0 ? "#2a662a" : "#111");">
+                    @(Model.Price == 0 ? "FREE" : $"${Model.Price}")
+                </div>
+                @if (Model.Reviews.Any())
+                {
+                    <div style="margin-top:0.5rem;">
+                        <div class="rating">★ @avgRating.ToString("F1") / 10</div>
+                        <div class="muted" style="font-size:0.85rem;">@Model.Reviews.Count reviews &middot; @recommendPercent% recommend</div>
+                    </div>
+                }
+                <div class="actions" style="justify-content:center;">
+                    <a asp-controller="Reviews" asp-action="Create" asp-route-gameId="@Model.Id" class="btn btn-primary">Write a Review</a>
+                </div>
+                <div class="actions" style="justify-content:center;">
+                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-sm">Edit Game</a>
+                    <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-sm btn-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h2>User Reviews</h2>
+@if (!Model.Reviews.Any())
+{
+    <div class="card">
+        <p class="muted">No reviews yet. Be the first to review this game!</p>
+        <a asp-controller="Reviews" asp-action="Create" asp-route-gameId="@Model.Id" class="btn btn-primary btn-sm">Write a Review</a>
+    </div>
+}
+else
+{
+    <div class="card">
+        @foreach (var review in Model.Reviews)
+        {
+            <div class="review">
+                <div class="head">
+                    <span class="author">@review.ReviewerName</span>
+                    <span class="@(review.Recommended ? "recommend" : "not-recommend")">
+                        @(review.Recommended ? "Recommended" : "Not Recommended")
+                    </span>
+                    <span class="rating">★ @review.Rating/10</span>
+                    <span class="muted">@review.Date.ToString("dd MMM yyyy")</span>
+                    <span class="review-actions">
+                        <a asp-controller="Reviews" asp-action="Edit" asp-route-id="@review.Id" class="btn btn-sm">Edit</a>
+                        <a asp-controller="Reviews" asp-action="Delete" asp-route-id="@review.Id" class="btn btn-sm btn-danger">Delete</a>
+                    </span>
+                </div>
+                <strong>@review.Title</strong>
+                <p>@review.Comment</p>
+            </div>
+        }
+    </div>
+}

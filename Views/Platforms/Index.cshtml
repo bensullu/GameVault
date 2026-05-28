@@ -1,0 +1,18 @@
+@model IEnumerable<Platform>
+@{
+    ViewData["Title"] = "Platforms";
+}
+
+<h1>Gaming Platforms</h1>
+
+<div class="grid grid-3">
+    @foreach (var platform in Model)
+    {
+        <div class="card">
+            <h3><a asp-action="Details" asp-route-id="@platform.Id">@platform.Name</a></h3>
+            <p><strong>Manufacturer:</strong> @platform.Manufacturer</p>
+            <p><strong>Released:</strong> @platform.ReleaseYear</p>
+            <p><strong>@platform.GamePlatforms.Count</strong> games available</p>
+        </div>
+    }
+</div>

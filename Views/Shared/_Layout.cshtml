@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - GameVault</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <a class="brand" asp-controller="Home" asp-action="Index">GameVault</a>
+            <ul class="nav">
+                <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                <li><a asp-controller="Games" asp-action="Index">Games</a></li>
+                <li><a asp-controller="Genres" asp-action="Index">Genres</a></li>
+                <li><a asp-controller="Studios" asp-action="Index">Studios</a></li>
+                <li><a asp-controller="Platforms" asp-action="Index">Platforms</a></li>
+                <li><a asp-controller="Statistics" asp-action="Index">Statistics</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            @RenderBody()
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            GameVault &mdash; Your personal game library &copy; 2026
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

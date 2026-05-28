@@ -1,0 +1,57 @@
+@{
+    ViewData["Title"] = "Home";
+    var featured = ViewBag.FeaturedGames as List<Game>;
+    var newReleases = ViewBag.NewReleases as List<Game>;
+}
+
+<h1>GameVault</h1>
+<p class="muted">A personal game library. Browse the catalog, read and write reviews, and explore statistics about the collection.</p>
+
+<div class="actions">
+    <a asp-controller="Games" asp-action="Index" class="btn btn-primary">Browse Games</a>
+    <a asp-controller="Statistics" asp-action="Index" class="btn">View Statistics</a>
+</div>
+
+<div class="grid grid-4" style="margin-top:1.5rem;">
+    <div class="stat-card"><div class="big">@ViewBag.TotalGames</div><div class="label">Games</div></div>
+    <div class="stat-card"><div class="big">@ViewBag.TotalStudios</div><div class="label">Studios</div></div>
+    <div class="stat-card"><div class="big">@ViewBag.TotalGenres</div><div class="label">Genres</div></div>
+    <div class="stat-card"><div class="big">@ViewBag.TotalReviews</div><div class="label">Reviews</div></div>
+</div>
+
+@if (featured != null && featured.Any())
+{
+    <h2 style="margin-top:2rem;">Top Rated Games</h2>
+    <div class="grid grid-4">
+        @foreach (var g in featured)
+        {
+            var avgRating = g.Reviews.Any() ? g.Reviews.Average(r => r.Rating) : 0;
+            <div class="game-card">
+                <h3><a asp-controller="Games" asp-action="Details" asp-route-id="@g.Id">@g.Title</a></h3>
+                <div class="meta">@g.Studio.Name &middot; @g.Genre.Name</div>
+                <div>
+                    <span class="rating">★ @avgRating.ToString("F1")/10</span>
+                    &nbsp;
+                    <span class="@(g.Price == 0 ? "price price-free" : "price")">@(g.Price == 0 ? "FREE" : $"${g.Price}")</span>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@if (newReleases != null && newReleases.Any())
+{
+    <h2 style="margin-top:2rem;">New Releases</h2>
+    <div class="grid grid-3">
+        @foreach (var g in newReleases)
+        {
+            <div class="game-card">
+                <h3><a asp-controller="Games" asp-action="Details" asp-route-id="@g.Id">@g.Title</a></h3>
+                <div class="meta">@g.ReleaseDate.ToString("MMM yyyy") &middot; @g.Genre.Name</div>
+                <div>
+                    <span class="@(g.Price == 0 ? "price price-free" : "price")">@(g.Price == 0 ? "FREE" : $"${g.Price}")</span>
+                </div>
+            </div>
+        }
+    </div>
+}
